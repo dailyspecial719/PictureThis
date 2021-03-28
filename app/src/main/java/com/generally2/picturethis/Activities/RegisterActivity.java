@@ -129,7 +129,13 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()){
                     showMessage("Account Created Successfully");
-                    updateUserInfo(name, pickedImgUri, mAuth.getCurrentUser());
+
+                    //check to see if picked image is null or not
+                    if(pickedImgUri != null) {
+                        updateUserInfo(name, pickedImgUri, mAuth.getCurrentUser());
+                    } else {
+                        updateUserInfoNoPhoto(name, mAuth.getCurrentUser());
+                    }
 
                 } else {
                     showMessage("Account Creation Failed");
@@ -177,6 +183,32 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
     }
+
+    private void updateUserInfoNoPhoto(final String name, final FirebaseUser currentUser) {
+
+                        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
+
+                        currentUser.updateProfile(profileUpdate)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            showMessage("Registration Successful");
+                                            updateUi();
+
+                                        }
+
+                                    }
+                                });
+
+
+
+
+
+    }
+
 
     private void updateUi() {
 

@@ -87,7 +87,7 @@ public class PostDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editCommentBtn.setVisibility(View.INVISIBLE);
-                DatabaseReference commentReference = firebaseDatabase.getReference("Comment").child(PostKey).push();
+                DatabaseReference commentReference = firebaseDatabase.getReference(COMMENT_KEY).child(PostKey).push();
                 String comment_context = editTextComment.getText().toString();
                 String uid = firebaseUser.getUid();
                 String uname = firebaseUser.getDisplayName();
@@ -126,13 +126,23 @@ public class PostDetailsActivity extends AppCompatActivity {
         textPostTitle.setText(postTitle);
 
         String postUserImage = getIntent().getExtras().getString("userPhoto");
-        Glide.with(this).load(postUserImage).into(imgUserPost);
+
+        if(postUserImage != null){
+            Glide.with(this).load(postUserImage).into(imgUserPost);
+        } else {
+            Glide.with(this).load(R.drawable.userphoto).into(imgUserPost);
+        }
+
 
         String postDescription = getIntent().getExtras().getString("description");
         textPostDesc.setText(postDescription);
 
+        if(firebaseUser.getPhotoUrl() != null){
+            Glide.with(this).load(firebaseUser.getPhotoUrl()).into(imgCurrentPhoto);
+        } else {
+            Glide.with(this).load(R.drawable.userphoto).into(imgCurrentPhoto);
+        }
 
-        Glide.with(this).load(firebaseUser.getPhotoUrl()).into(imgCurrentPhoto);
 
         PostKey = getIntent().getExtras().getString("postKey");
         String date = timestampToString(getIntent().getExtras().getLong("postDate"));

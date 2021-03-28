@@ -199,12 +199,24 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String imageDownloadLink = uri.toString();
-                                    Post post = new Post(popupTitle.getText().toString(),
-                                            popupDescription.getText().toString(),
-                                            imageDownloadLink,
-                                            currentUser.getUid(),
-                                            currentUser.getPhotoUrl().toString());
-                                    addPost(post);
+
+                                    if(currentUser.getPhotoUrl() != null){
+                                        Post post = new Post(popupTitle.getText().toString(),
+                                                popupDescription.getText().toString(),
+                                                imageDownloadLink,
+                                                currentUser.getUid(),
+                                                currentUser.getPhotoUrl().toString());
+                                        addPost(post);
+                                    } else {
+                                        Post post = new Post(popupTitle.getText().toString(),
+                                                popupDescription.getText().toString(),
+                                                imageDownloadLink,
+                                                currentUser.getUid(),
+                                                null);
+                                        addPost(post);
+                                    }
+
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -319,7 +331,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         navUserMail.setText(currentUser.getEmail());
         navUserName.setText(currentUser.getDisplayName());
 
-        Glide.with(this).load(currentUser.getPhotoUrl()).into(navUserPhoto);
+        if (currentUser.getPhotoUrl() != null){
+            Glide.with(this).load(currentUser.getPhotoUrl()).into(navUserPhoto);
+        } else {
+            Glide.with(this).load(R.drawable.userphoto).into(navUserPhoto);
+        }
+
+
 
 
 
